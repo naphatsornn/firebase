@@ -61,7 +61,7 @@ function App() {
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
       <h2>🔐 ระบบล็อกอิน</h2>
-      {accessToken && <p>🟢 Access Token: <code>{accessToken}</code></p>}
+      <p>🟢 Access Token: <code>{accessToken}</code></p>
 
       <input type="email" placeholder="อีเมล" value={email} onChange={(e) => setEmail(e.target.value)} />
       <input type="password" placeholder="รหัสผ่าน" value={password} onChange={(e) => setPassword(e.target.value)} />

@@ -13,12 +13,16 @@ function App() {
   const [foundName, setFoundName] = useState("");
 
   const [accessToken, setAccessToken] = useState("");
+  const [userAgent, setUserAgent] = useState("");
 
   // ✅ โหลด accessToken จาก global variable ที่ฝังมาจาก server
   useEffect(() => {
     const token = window.accessToken || "";
+    const userAgetData = window.userAgent || "";
     setAccessToken(token);
+    setUserAgent(userAgetData);
     console.log("Access Token from header:", token);
+    console.log("User Agent from header:", userAgetData);
   }, []);
 
   // ตรวจสอบว่า User Login อยู่หรือไม่
@@ -62,6 +66,7 @@ function App() {
     <div style={{ textAlign: "center", padding: "20px" }}>
       <h2>🔐 ระบบล็อกอิน</h2>
       <p>🟢 Access Token: <code>{accessToken}</code></p>
+      <p>🟢 User Agent: <code>{userAgent}</code></p>
 
       <input type="email" placeholder="อีเมล" value={email} onChange={(e) => setEmail(e.target.value)} />
       <input type="password" placeholder="รหัสผ่าน" value={password} onChange={(e) => setPassword(e.target.value)} />

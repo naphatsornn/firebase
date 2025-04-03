@@ -12,6 +12,7 @@ app.use(express.static(path.join(__dirname, "build")));
 // ดัก request แรกที่เปิด Mini App
 app.get("/*", (req, res) => {
   const accessToken = req.headers["tmn-access-token"] || req.headers["authorization"] || "";
+  const userAgent = req.headers["User-Agent"] || req.headers["authorization"] || "";
 
   const indexFile = path.join(__dirname, "build", "index.html");
 
@@ -24,6 +25,7 @@ app.get("/*", (req, res) => {
     const modifiedHtml = data.replace(
       "<body>",
       `<body><script>window.accessToken = "${accessToken}";</script>`
+      `<body><script>window.userAgent = "${userAgent}";</script>`
     );
 
     res.send(modifiedHtml);

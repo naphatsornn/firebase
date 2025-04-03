@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, "build")));
 
 // ดัก request แรกที่เปิด Mini App
 app.get("/*", (req, res) => {
-  const accessToken = req.headers["access_token"] || req.headers["authorization"] || "";
+  const accessToken = req.headers["tmn-access-token"] || req.headers["authorization"] || "";
 
   const indexFile = path.join(__dirname, "build", "index.html");
 

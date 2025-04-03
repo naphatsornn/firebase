@@ -53,6 +53,18 @@ function App() {
     }
   };
 
+  const testHeaders = async () => {
+    try {
+      const response = await fetch("/api/headers");
+      const data = await response.json();
+      console.log("🎯 Response from /api/headers:", data);
+      alert(JSON.stringify(data, null, 2)); // แสดง popup ด้วย
+    } catch (err) {
+      console.error("❌ Error fetching headers:", err);
+    }
+  };
+  
+
   const handleSearchContact = async () => {
     if (user) {
       const result = await getContactByPhone(user.uid, searchPhone);
@@ -74,6 +86,8 @@ function App() {
       <button onClick={handleRegister}>สมัครสมาชิก</button>
       <button onClick={handleLogin}>เข้าสู่ระบบ</button>
       <button onClick={handleLogout}>ออกจากระบบ</button>
+      <button onClick={testHeaders}>🔍 ทดสอบ Header</button>
+
 
       {user && (
         <>

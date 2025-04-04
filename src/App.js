@@ -55,14 +55,20 @@ function App() {
 
   const testHeaders = async () => {
     try {
-      const response = await fetch("/api/headers");
+      const response = await fetch("/api/headers"); // หรือ URL จริงหากจำเป็น
       const data = await response.json();
-      console.log("🎯 Response from /api/headers:", data);
-      alert(JSON.stringify(data, null, 2)); // แสดง popup ด้วย
+      console.log("✅ Response from /api/headers:", data);
+  
+      // เก็บข้อมูลไว้ใน state เพื่อแสดงบนหน้าเว็บ
+      setHeaderResult(data);
     } catch (err) {
       console.error("❌ Error fetching headers:", err);
+      setHeaderResult({ error: "ไม่สามารถดึงข้อมูล header ได้" });
     }
   };
+
+  const [headerResult, setHeaderResult] = useState(null);
+
   
 
   const handleSearchContact = async () => {
@@ -86,6 +92,14 @@ function App() {
       <button onClick={handleLogin}>เข้าสู่ระบบ</button>
       <button onClick={handleLogout}>ออกจากระบบ</button>
       <button onClick={testHeaders}>🔍 ทดสอบ Header</button>
+
+      {headerResult && (
+  <div style={{ marginTop: "20px", textAlign: "left", background: "#f2f2f2", padding: "10px", borderRadius: "8px" }}>
+    <h3>📦 ผลลัพธ์จาก Header</h3>
+    <pre>{JSON.stringify(headerResult, null, 2)}</pre>
+  </div>
+)}
+
 
 
       {user && (

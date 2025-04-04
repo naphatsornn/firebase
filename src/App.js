@@ -14,22 +14,15 @@ function App() {
 
   const [accessToken, setAccessToken] = useState("");
   const [userAgent, setUserAgent] = useState("");
-  const [headerResult, setHeaderResult] = useState(null);
 
-  // ✅ โหลด accessToken จาก global variable ที่ middleware ฝังไว้ใน cookie
+  // ✅ โหลด accessToken จาก global variable ที่ฝังมาจาก server
   useEffect(() => {
-    const cookie = document.cookie;
-    const tokenMatch = cookie.match(/accessToken=([^;]+)/);
-    const userAgentMatch = cookie.match(/userAgent=([^;]+)/);
-
-    const token = tokenMatch ? decodeURIComponent(tokenMatch[1]) : "";
-    const agent = userAgentMatch ? decodeURIComponent(userAgentMatch[1]) : "";
-
+    const token = window.accessToken || "";
+    const userAgetData = window.userAgent || "";
     setAccessToken(token);
-    setUserAgent(agent);
-
-    console.log("Access Token from cookie:", token);
-    console.log("User Agent from cookie:", agent);
+    setUserAgent(userAgetData);
+    console.log("Access Token from header:", token);
+    console.log("User Agent from header:", userAgetData);
   }, []);
 
   // ตรวจสอบว่า User Login อยู่หรือไม่
@@ -62,7 +55,7 @@ function App() {
 
   const testHeaders = async () => {
     try {
-      const response = await fetch("/api/headers");
+      const response = await fetch("/api/headers"); // หรือ URL จริงหากจำเป็น
       const data = await response.json();
       console.log("✅ Response from /api/headers:", data);
   
@@ -73,6 +66,10 @@ function App() {
       setHeaderResult({ error: "ไม่สามารถดึงข้อมูล header ได้" });
     }
   };
+
+  const [headerResult, setHeaderResult] = useState(null);
+
+  
 
   const handleSearchContact = async () => {
     if (user) {
@@ -87,6 +84,7 @@ function App() {
     <div style={{ textAlign: "center", padding: "20px" }}>
       <h2>🔐 ระบบล็อกอิน</h2>
 
+
       <input type="email" placeholder="อีเมล" value={email} onChange={(e) => setEmail(e.target.value)} />
       <input type="password" placeholder="รหัสผ่าน" value={password} onChange={(e) => setPassword(e.target.value)} />
       <br />
@@ -96,11 +94,13 @@ function App() {
       <button onClick={testHeaders}>🔍 ทดสอบ Header</button>
 
       {headerResult && (
-        <div style={{ marginTop: "20px", textAlign: "left", background: "#f2f2f2", padding: "10px", borderRadius: "8px" }}>
-          <h3>📦 ผลลัพธ์จาก Header</h3>
-          <pre>{JSON.stringify(headerResult, null, 2)}</pre>
-        </div>
-      )}
+  <div style={{ marginTop: "20px", textAlign: "left", background: "#f2f2f2", padding: "10px", borderRadius: "8px" }}>
+    <h3>📦 ผลลัพธ์จาก Header</h3>
+    <pre>{JSON.stringify(headerResult, null, 2)}</pre>
+  </div>
+)}
+
+
 
       {user && (
         <>

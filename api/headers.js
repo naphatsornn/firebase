@@ -1,6 +1,6 @@
 export default function handler(req, res) {
     // ดึง header ที่เราสนใจ
-    const accessToken = req.headers['tmn-access-token'] || req.headers['authorization'] || "";
+    const accessToken = req.headers['TMN-Access-Token'] || "";
     const tokenType = req.headers['tmn-token-type'] || "";
     const expiresIn = req.headers['tmn-expires-in'] || "";
     const userAgent = req.headers['user-agent'] || "";

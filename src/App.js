@@ -55,9 +55,9 @@ function App() {
 
   const testHeaders = async () => {
     try {
-      const response = await fetch("https://firebase-contact-app-e9we.vercel.app/"); // หรือ URL จริงหากจำเป็น
+      const response = await fetch("/api/headers"); // หรือ URL จริงหากจำเป็น
       const data = await response.json();
-      console.log("✅ Response from https://firebase-contact-app-e9we.vercel.app/:", data);
+      console.log("✅ Response from /api/headers:", data);
   
       // เก็บข้อมูลไว้ใน state เพื่อแสดงบนหน้าเว็บ
       setHeaderResult(data);

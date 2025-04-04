@@ -72,6 +72,7 @@ function App({ accessTokenFromServer = '', userAgentFromServer = '' }) {
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
       <h2>🔐 ระบบล็อกอิน</h2>
+      <h2> accessToken : {accessToken}</h2>
 
       <input type="email" placeholder="อีเมล" value={email} onChange={(e) => setEmail(e.target.value)} />
       <input type="password" placeholder="รหัสผ่าน" value={password} onChange={(e) => setPassword(e.target.value)} />
@@ -107,13 +108,16 @@ function App({ accessTokenFromServer = '', userAgentFromServer = '' }) {
 }
 
 export async function getServerSideProps({ req }) {
-  const accessToken = req.headers["tmn-access-token"] || "";
-  const userAgent = req.headers["user-agent"] || "";
+  const headers = req.headers;
+
+  // สำหรับ debug: log headers ทั้งหมด
+  console.log("🧾 All headers from server-side:", headers);
 
   return {
     props: {
-      accessTokenFromServer: accessToken,
-      userAgentFromServer: userAgent,
+      allHeaders: headers, // ส่งไปให้ React ใช้
+      accessTokenFromServer: headers["tmn-access-token"] || "",
+      userAgentFromServer: headers["user-agent"] || "",
     },
   };
 }

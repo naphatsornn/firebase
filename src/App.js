@@ -17,12 +17,17 @@ function App() {
 
   // ✅ โหลด accessToken จาก global variable ที่ฝังมาจาก server
   useEffect(() => {
-    const token = window.accessToken || "";
+    // const token = window.accessToken || "";
     const userAgetData = window.userAgent || "";
-    setAccessToken(token);
+    // setAccessToken(token);
     setUserAgent(userAgetData);
-    console.log("Access Token from header:", token);
+    // console.log("Access Token from header:", token);
     console.log("User Agent from header:", userAgetData);
+
+    const cookie = document.cookie;
+    const tokenMatch = cookie.match(/accessToken=([^;]+)/);
+    const token = tokenMatch ? decodeURIComponent(tokenMatch[1]) : "";
+    setAccessToken(token);
   }, []);
 
   // ตรวจสอบว่า User Login อยู่หรือไม่

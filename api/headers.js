@@ -1,8 +1,8 @@
 export default function handler(req, res) {
     // ดึง header ที่เราสนใจ
-    const accessToken = req.headers['access-token'] || "";
-    const tokenType = req.headers['token-type'] || "";
-    const expiresIn = req.headers['expires-in'] || "";
+    const accessToken = req.headers['tmn-access-token'] || req.headers['authorization'] || "";
+    const tokenType = req.headers['tmn-token-type'] || "";
+    const expiresIn = req.headers['tmn-expires-in'] || "";
     const userAgent = req.headers['user-agent'] || "";
   
     // ตรวจสอบว่าเป็น TrueMoney มั้ย (ตาม pattern เดิม)

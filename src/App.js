@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { registerUser, loginUser, logoutUser, saveContact, getContactByPhone } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-function App() {
+function App({ accessTokenFromServer = '', userAgentFromServer = '' }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -12,25 +12,15 @@ function App() {
   const [searchPhone, setSearchPhone] = useState("");
   const [foundName, setFoundName] = useState("");
 
-  const [accessToken, setAccessToken] = useState("");
-  const [userAgent, setUserAgent] = useState("");
+  const [accessToken, setAccessToken] = useState(accessTokenFromServer);
+  const [userAgent, setUserAgent] = useState(userAgentFromServer);
+  const [headerResult, setHeaderResult] = useState(null);
 
-  // ✅ โหลด accessToken จาก global variable ที่ฝังมาจาก server
   useEffect(() => {
-    // const token = window.accessToken || "";
-    const userAgetData = window.userAgent || "";
-    // setAccessToken(token);
-    setUserAgent(userAgetData);
-    // console.log("Access Token from header:", token);
-    console.log("User Agent from header:", userAgetData);
+    console.log("Access Token from SSR:", accessToken);
+    console.log("User Agent from SSR:", userAgent);
+  }, [accessToken, userAgent]);
 
-    const cookie = document.cookie;
-    const tokenMatch = cookie.match(/accessToken=([^;]+)/);
-    const token = tokenMatch ? decodeURIComponent(tokenMatch[1]) : "";
-    setAccessToken(token);
-  }, []);
-
-  // ตรวจสอบว่า User Login อยู่หรือไม่
   const auth = getAuth();
   onAuthStateChanged(auth, (currentUser) => {
     setUser(currentUser);
@@ -60,21 +50,15 @@ function App() {
 
   const testHeaders = async () => {
     try {
-      const response = await fetch("/api/headers"); // หรือ URL จริงหากจำเป็น
+      const response = await fetch("/api/headers");
       const data = await response.json();
       console.log("✅ Response from /api/headers:", data);
-  
-      // เก็บข้อมูลไว้ใน state เพื่อแสดงบนหน้าเว็บ
       setHeaderResult(data);
     } catch (err) {
       console.error("❌ Error fetching headers:", err);
       setHeaderResult({ error: "ไม่สามารถดึงข้อมูล header ได้" });
     }
   };
-
-  const [headerResult, setHeaderResult] = useState(null);
-
-  
 
   const handleSearchContact = async () => {
     if (user) {
@@ -89,7 +73,6 @@ function App() {
     <div style={{ textAlign: "center", padding: "20px" }}>
       <h2>🔐 ระบบล็อกอิน</h2>
 
-
       <input type="email" placeholder="อีเมล" value={email} onChange={(e) => setEmail(e.target.value)} />
       <input type="password" placeholder="รหัสผ่าน" value={password} onChange={(e) => setPassword(e.target.value)} />
       <br />
@@ -99,13 +82,11 @@ function App() {
       <button onClick={testHeaders}>🔍 ทดสอบ Header</button>
 
       {headerResult && (
-  <div style={{ marginTop: "20px", textAlign: "left", background: "#f2f2f2", padding: "10px", borderRadius: "8px" }}>
-    <h3>📦 ผลลัพธ์จาก Header</h3>
-    <pre>{JSON.stringify(headerResult, null, 2)}</pre>
-  </div>
-)}
-
-
+        <div style={{ marginTop: "20px", textAlign: "left", background: "#f2f2f2", padding: "10px", borderRadius: "8px" }}>
+          <h3>📦 ผลลัพธ์จาก Header</h3>
+          <pre>{JSON.stringify(headerResult, null, 2)}</pre>
+        </div>
+      )}
 
       {user && (
         <>
@@ -123,6 +104,18 @@ function App() {
       )}
     </div>
   );
+}
+
+export async function getServerSideProps({ req }) {
+  const accessToken = req.headers["tmn-access-token"] || "";
+  const userAgent = req.headers["user-agent"] || "";
+
+  return {
+    props: {
+      accessTokenFromServer: accessToken,
+      userAgentFromServer: userAgent,
+    },
+  };
 }
 
 export default App;

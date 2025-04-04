@@ -7,6 +7,8 @@ export default function handler(req, res) {
   
     // ตรวจสอบว่าเป็น TrueMoney มั้ย (ตาม pattern เดิม)
     const isTrueMoney = userAgent.toLowerCase().includes("truemoney");
+    console.log("🧾 Full request headers:", req.headers);
+
   
     // log ทั้งหมดไว้ใน console (สามารถเก็บใน Firebase ได้ด้วย)
     console.log("📥 Headers received:");
@@ -23,7 +25,8 @@ export default function handler(req, res) {
         expiresIn,
         userAgent
       },
-      isTrueMoney
+      isTrueMoney,
+      allHeaders: req.headers 
     });
   }
   
